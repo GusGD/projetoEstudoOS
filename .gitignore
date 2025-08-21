@@ -1,0 +1,82 @@
+# Binários e builds
+bin/
+dist/
+build/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Arquivos de ambiente
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Dependências
+node_modules/
+vendor/
+go.sum
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Arquivos temporários
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# IDEs e editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Sistema operacional
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Docker
+.dockerignore
+
+# Testes
+coverage/
+*.test
+*.out
+
+# Arquivos de backup
+*.bak
+*.backup
+*.sql.bak
+
+# Pasta de arquivos (documentação técnica)
+arquivos/
+
+# Arquivos de configuração local
+config.local.*
+settings.local.*
+
+# Cache
+.cache/
+.parcel-cache/
+.npm/
+.eslintcache
+
+# Arquivos de lock (manter apenas um)
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
