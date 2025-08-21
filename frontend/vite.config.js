@@ -3,7 +3,6 @@ import vue from '@vitejs/plugin-vue'
 import { resolve } from 'path'
 
 export default defineConfig(({ mode }) => {
-  // Carregar variáveis de ambiente
   const env = loadEnv(mode, process.cwd(), '')
   
   return {
@@ -30,14 +29,15 @@ export default defineConfig(({ mode }) => {
         }
       }
     },
-  build: {
-    outDir: 'dist',
-    sourcemap: true,
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          vendor: ['vue', 'vue-router', 'pinia'],
-          ui: ['@vueuse/core']
+    build: {
+      outDir: 'dist',
+      sourcemap: true,
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            vendor: ['vue', 'vue-router', 'pinia'],
+            ui: ['@vueuse/core']
+          }
         }
       }
     }
