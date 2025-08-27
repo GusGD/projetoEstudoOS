@@ -4,63 +4,79 @@
       <header class="header">
         <h1>🚀 Sistema de Ordem de Serviços</h1>
         <p class="subtitle">Frontend Vue 3 + Backend Go</p>
+        <nav class="navigation">
+          <a href="#" @click.prevent="currentPage = 'status'" :class="{ active: currentPage === 'status' }">
+            📊 Status
+          </a>
+          <a href="#" @click.prevent="currentPage = 'components'" :class="{ active: currentPage === 'components' }">
+            🧩 Componentes
+          </a>
+        </nav>
       </header>
       
       <main class="main">
-        <div class="status-card">
-          <h2>Status dos Serviços</h2>
-          
-          <div class="service-status">
-            <div class="status-item">
-              <span class="status-icon frontend">✅</span>
-              <div class="status-info">
-                <h3>Frontend (Vue 3)</h3>
-                <p>Rodando na porta 3000</p>
-                <span class="status-badge success">ATIVO</span>
+        <!-- Página de Status -->
+        <div v-if="currentPage === 'status'">
+          <div class="status-card">
+            <h2>Status dos Serviços</h2>
+            
+            <div class="service-status">
+              <div class="status-item">
+                <span class="status-icon frontend">✅</span>
+                <div class="status-info">
+                  <h3>Frontend (Vue 3)</h3>
+                  <p>Rodando na porta 3000</p>
+                  <span class="status-badge success">ATIVO</span>
+                </div>
+              </div>
+              
+              <div class="status-item">
+                <span class="status-icon backend" :class="{ 'checking': checkingBackend }">🔄</span>
+                <div class="status-info">
+                  <h3>Backend (Go)</h3>
+                  <p v-if="checkingBackend">Verificando conexão...</p>
+                  <p v-else-if="backendStatus.online">Rodando na porta 8080</p>
+                  <p v-else>Serviço offline</p>
+                  <span class="status-badge" :class="backendStatus.online ? 'success' : 'error'">
+                    {{ backendStatus.online ? 'ATIVO' : 'OFFLINE' }}
+                  </span>
+                </div>
               </div>
             </div>
             
-            <div class="status-item">
-              <span class="status-icon backend" :class="{ 'checking': checkingBackend }">🔄</span>
-              <div class="status-info">
-                <h3>Backend (Go)</h3>
-                <p v-if="checkingBackend">Verificando conexão...</p>
-                <p v-else-if="backendStatus.online">Rodando na porta 8080</p>
-                <p v-else>Serviço offline</p>
-                <span class="status-badge" :class="backendStatus.online ? 'success' : 'error'">
-                  {{ backendStatus.online ? 'ATIVO' : 'OFFLINE' }}
-                </span>
+            <div class="connection-test" v-if="backendStatus.online">
+              <h3>🧪 Teste de Conexão</h3>
+              <div class="test-result">
+                <p><strong>Endpoint:</strong> /api/v1/health</p>
+                <p><strong>Resposta:</strong> {{ backendStatus.response }}</p>
+                <p><strong>Tempo:</strong> {{ backendStatus.responseTime }}ms</p>
               </div>
             </div>
-          </div>
-          
-          <div class="connection-test" v-if="backendStatus.online">
-            <h3>🧪 Teste de Conexão</h3>
-            <div class="test-result">
-              <p><strong>Endpoint:</strong> /api/v1/health</p>
-              <p><strong>Resposta:</strong> {{ backendStatus.response }}</p>
-              <p><strong>Tempo:</strong> {{ backendStatus.responseTime }}ms</p>
+            
+            <div class="actions">
+              <button @click="testBackendConnection" class="btn btn-primary">
+                🔄 Testar Conexão
+              </button>
+              <button @click="openBackendHealth" class="btn btn-secondary">
+                🌐 Abrir Backend
+              </button>
             </div>
           </div>
           
-          <div class="actions">
-            <button @click="testBackendConnection" class="btn btn-primary">
-              🔄 Testar Conexão
-            </button>
-            <button @click="openBackendHealth" class="btn btn-secondary">
-              🌐 Abrir Backend
-            </button>
+          <div class="info-card">
+            <h3>📋 Informações do Sistema</h3>
+            <ul>
+              <li><strong>Frontend:</strong> Vue 3 + Vite + Pinia</li>
+              <li><strong>Backend:</strong> Go + Gin + PostgreSQL</li>
+              <li><strong>Padrões:</strong> Repository, Service Layer, Event Sourcing</li>
+              <li><strong>Status:</strong> Desenvolvimento ativo</li>
+            </ul>
           </div>
         </div>
-        
-        <div class="info-card">
-          <h3>📋 Informações do Sistema</h3>
-          <ul>
-            <li><strong>Frontend:</strong> Vue 3 + Vite + Pinia</li>
-            <li><strong>Backend:</strong> Go + Gin + PostgreSQL</li>
-            <li><strong>Padrões:</strong> Repository, Service Layer, Event Sourcing</li>
-            <li><strong>Status:</strong> Desenvolvimento ativo</li>
-          </ul>
+
+        <!-- Página de Componentes -->
+        <div v-else-if="currentPage === 'components'">
+          <ComponentLibrary />
         </div>
       </main>
     </div>
@@ -69,7 +85,9 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import ComponentLibrary from '@/pages/ComponentLibrary.vue'
 
+const currentPage = ref('status')
 const checkingBackend = ref(false)
 const backendStatus = ref({
   online: false,
@@ -154,7 +172,33 @@ body {
 .subtitle {
   font-size: 1.2rem;
   opacity: 0.9;
-  margin: 0;
+  margin: 0 0 1.5rem 0;
+}
+
+.navigation {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.navigation a {
+  color: white;
+  text-decoration: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease-in-out;
+  border: 2px solid transparent;
+}
+
+.navigation a:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.navigation a.active {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
 }
 
 .main {
